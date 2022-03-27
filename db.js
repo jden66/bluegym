@@ -1,20 +1,32 @@
 import mysql from "mysql2";
 import { config } from "./core/config";
 
-// create the connection to database
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
   ...config.db,
+  waitForConnections: true,
+  connectionLimit: 5,
+  queueLimit: 0,
 });
 
-export const request = async (q, params) => {
+function getConnection(callback) {
+  pool.getConnection(function (err, conn) {
+    if (!err) {
+      callback(conn);
+    }
+  });
+}
+
+export async function request(q, params) {
   return new Promise((resolve, reject) => {
-    connection.query(q, params, function (err, results) {
-      if (err) {
-        return reject(err);
-      }
-      resolve(results);
-      connection.destroy();
-      return;
+    getConnection((conn) => {
+      conn.query(q, params, function (err, results) {
+        if (!err) {
+          resolve(results);
+        } else {
+          reject(err);
+        }
+      });
+      conn.release();
     });
   });
-};
+}
