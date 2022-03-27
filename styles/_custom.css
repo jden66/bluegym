@@ -1,0 +1,7 @@
+.content {
+  top: 68.5px;
+  padding-top: 20px;
+  position: fixed;
+  width: 100%;
+  height: calc(100vh - 68.5px);
+}
