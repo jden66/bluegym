@@ -6,7 +6,7 @@ import "../styles/globals.css";
 import Layout from "../components/layout/layout";
 import useLogin from "../effects/useLogin";
 
-axios.defaults.baseURL = "http://localhost:3000/api";
+axios.defaults.baseURL = `${location.origin}/api`;
 
 function MyApp({ Component, pageProps }) {
   const { user } = useLogin("trainer1");
