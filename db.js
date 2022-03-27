@@ -12,7 +12,9 @@ export const request = async (q, params) => {
       if (err) {
         return reject(err);
       }
-      return resolve(results);
+      resolve(results);
+      connection.destroy();
+      return;
     });
   });
 };
