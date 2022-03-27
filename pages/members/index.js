@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import AppContext from "../../core/contexts/AppContext";
 import useMembers from "../../effects/useMembers";
 import { formatDate } from "../../utils/date";
-import BluegymTable from "../../components/BluegymTable";
+import BluegymTable from "../../components/bluegymTable";
 import PageHeader from "../../components/pageHeader";
 import MemberModal from "./components/memberModal";
 
