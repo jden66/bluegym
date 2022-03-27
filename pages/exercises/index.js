@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ExerciseHeaderInfo from "./components/ExerciseHeaderInfo";
+import ExerciseHeaderInfo from "./components/exerciseHeaderInfo";
 import ExerciseHeaderTrainerInfo from "./components/exerciseHeaderTrainerInfo";
 import ExerciseList from "./components/exerciseList";
 import ExerciseModal from "./components/exerciseModal";
