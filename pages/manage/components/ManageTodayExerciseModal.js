@@ -5,9 +5,9 @@ import { modalStyle } from "../../../components/styleds";
 
 export default function ManageTodayExerciseModal({ modal, handleClose }) {
   const { push } = useRouter();
-
+console.log(modal)
   const redirectUpdate = () => {
-    push(`/manage/edit/${member.id}?date=${modal?.item.key}`);
+    push(`/manage/edit/${modal?.member.id}?date=${modal?.item.key}`);
   };
   return (
     <Modal
