@@ -10,7 +10,7 @@ if (typeof window !== "undefined") {
   axios.defaults.baseURL = `${window.location.origin}/api`;
 }
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps, ...props }) {
   const { user } = useLogin("trainer1");
   const theme = createTheme({
     palette: {

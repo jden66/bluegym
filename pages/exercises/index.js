@@ -7,7 +7,10 @@ import ExerciseModal from "./components/exerciseModal";
 import { Grid } from "@mui/material";
 import Head from "next/head";
 
-export default function Exercises() {
+import BluegymButton from "../../components/bluegymButton";
+import cookies from "next-cookies";
+
+function Exercises() {
   const [modal, setModal] = useState({
     open: false,
     type: "create",
@@ -50,3 +53,11 @@ export default function Exercises() {
     </>
   );
 }
+
+Exercises.getInitialProps = (ctx) => {
+  const allCookies = cookies(ctx);
+  console.log(allCookies);
+  return {};
+};
+
+export default Exercises;

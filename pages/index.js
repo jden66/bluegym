@@ -1,11 +1,13 @@
 import styles from "../styles/Home.module.css";
 import PageHeader from "../components/pageHeader";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className={styles.container}>
       <PageHeader title="Home" />
       <main className={styles.main}>
+        <Link href="/api/auth/google">google login</Link>
         <h1 className={styles.title}>Preparing Home</h1>
       </main>
       {/* 

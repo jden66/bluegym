@@ -1,5 +1,6 @@
 import axios from "axios";
 import useSWR from "swr";
+import { config } from "../core/config";
 
 const getUserData = async (url, loginuser) => {
   const { data } = await axios.post("/login", {
@@ -29,3 +30,7 @@ export default function useUser(id) {
 
   return { user: null, loading: false };
 }
+
+/*
+ * Create form to request access token from Google's OAuth 2.0 server.
+ */
