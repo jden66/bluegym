@@ -1,39 +1,53 @@
 import axios from "axios";
+import { add } from "date-fns";
+import {
+  checkUserInfo,
+  checkUserToken,
+  getGoogleUserInfo,
+  initialGetAccessToken,
+  insertGoogleIdOfTrainer,
+  insertGoogleTokenOfTrainer,
+} from "../../../../core/auth/google";
 import { config } from "../../../../core/config";
-
-const googleTokenHost = `https://oauth2.googleapis.com/token`;
 
 export default async function handler(req, res) {
   const { method, query } = req;
   if (method === "GET") {
-    const { client_id, client_secret, redirect_uri } = config.google;
     const { code } = query;
     try {
-      const { data } = await axios.post(googleTokenHost, {
-        code,
-        client_id,
-        client_secret,
-        redirect_uri,
-        grant_type: "authorization_code",
-      });
       /**
-       * 토큰을 얻고 해야할 일
-       * 1. 구글 이메일 조회하여 회원정보에 있는지 확인
-       * 2.
+       * 1. callback func임
+       * 2. access_token을 요청하는 function을 진행한 후, 회원가입여부 판단 등을 진행
        */
-      const { access_token } = data;
-      const { data: userInfo } = await axios.get(
-        `https://www.googleapis.com/oauth2/v2/userinfo`,
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      );
-      console.log(userInfo);
-      // res.setHeader("Set-cookie", `token=${access_token}; path=/;`);
-      return res.redirect("/", 304);
+      // get access token
+      const token = await initialGetAccessToken(code);
+      // get google user info
+      const userInfo = await getGoogleUserInfo(token);
+      const isUser = await checkUserInfo(userInfo);
+      if (isUser) {
+        // 등록된 유저가 있음
+        // 토큰 체크
+        await checkUserToken(userInfo);
+      } else {
+        // 등록된 유저가 없음
+        // 등록 절차 진행
+        await insertGoogleIdOfTrainer(userInfo);
+        const randomId = await insertGoogleTokenOfTrainer({
+          ...token,
+          ...userInfo,
+        });
+
+        const expiredDate = add(new Date(), { days: 1 }).toUTCString();
+        res.setHeader(
+          "Set-cookie",
+          `SID=${randomId}; path=/; Expires=${expiredDate};`
+        );
+        // 해당 로직 실패시 제거 로직 필요
+      }
+
+      return res.redirect("/", { location: "/" });
     } catch (error) {
+      console.error("[ERROR]:[google oauth2 callback]::", error);
       return res.redirect("/", 500);
     }
   }
@@ -75,10 +89,4 @@ async function logout(userId) {
     console.error("[logout]:[error]", error);
     return false;
   }
-}
-
-async function getGoogleUserInfo(token) {
-  /**
-   * expired 확인 필요
-   */
 }

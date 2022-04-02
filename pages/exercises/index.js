@@ -55,9 +55,18 @@ function Exercises() {
 }
 
 Exercises.getInitialProps = (ctx) => {
-  const allCookies = cookies(ctx);
-  console.log(allCookies);
-  return {};
+  const { SID } = cookies(ctx);
+  if (SID) {
+    console.log("ok sid");
+  } else {
+    console.log("no sid");
+    // // ctx.res.writeHead(307, {Location})
+    // ctx.res.writeHead(302, {
+    //   Location: "/",
+    // });
+    // ctx.res.end();
+  }
+  return { props: {} };
 };
 
 export default Exercises;
